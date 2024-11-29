@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+// #define int long long
+#define fastio ios_base::sync_with_stdio(false); cin.tie(NULL);
+#define YN(ans) ans?cout<<"YES"<<endl:cout<<"NO"<<endl;
+#define vin(a,n) vector<int>a(n);for(auto &x:a)cin>>x;
+#define st(v,x) x==0?sort(v.begin(),v.end()):sort(v.rbegin() , v.rend());
+#define vout(a) for(auto x:a){cout<<x<<' ';}cout<<"\n";
+#define all(a) a.begin() a.end();
+using namespace std;
+const int mod=1e9+7,N=2e3+3;
+int dr[]={-1,+1,0,0} , dc[]={0,0,-1,+1};
+vector<vector<bool>>vis(N,vector<bool>(N,false));
+int n,m,nextlayer=0,leftlayer=1,mvcount=0;
+vector<string>vg;
+struct point{
+    int x,y;
+}st;
+queue<point>q;
+
+void explore_neighbours(point tt){
+    for(int i=0;i<4;i++){
+        point t;
+        t.x = tt.x + dr[i];
+        t.y = tt.y + dc[i];
+
+        if(t.x<0 or t.y<0 or t.x>=n or t.y>=m or vis[t.x][t.y] or vg[t.x][t.y]=='#')continue;
+
+        q.push(t);
+        vis[t.x][t.y]=1;
+        nextlayer++;
+    }
+}
+
+int bfs(){
+    bool ok=false;
+    q.push(st);
+    vis[st.x][st.y]=1;
+    while(!q.empty()){
+        point ss=q.front();
+        q.pop();
+        // cout<<ss.x<<" "<<ss.y<<" "<<mvcount<<endl;
+
+        if(vg[ss.x][ss.y]=='T'){
+            ok=true;
+            break;
+        }
+        explore_neighbours(ss);
+        leftlayer--;
+        if(leftlayer==0){
+            leftlayer=nextlayer;
+            nextlayer=0;
+            mvcount++;
+        }
+    }
+    if(ok)return mvcount;
+    return -1;
+}
+
+void solved_by_RAFIQ(){
+    cin>>n>>m;
+    for(int i=0;i<n;i++){
+        string s;cin>>s;
+        vg.push_back(s);
+        for(int j=0;j<m;j++){
+            if(s[j]=='S')st.x=i, st.y=j;
+        }
+    }
+    
+    cout<<bfs()<<endl;
+}
+
+signed main(){
+    fastio
+    int test_case=1,n=1;//cin>>test_case;
+    while (test_case--){
+        solved_by_RAFIQ();
+    }
+}
